@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash +x
 
 apt-get update
 #apt-get -y install git
@@ -17,6 +17,7 @@ find /var/www/mysite -name settings.py -exec sed -i "s/ALLOWED_HOSTS\ \=\ \[\]/A
 cp /home/vagrant/sharedFolder/default /etc/apache2/sites-available/000-default.conf
 echo "WSGIPythonPath /var/www/mysite" | sudo tee -a /etc/apache2/apache2.conf
 service apache2 restart
+echo "Server address is ${IP_ADDRESS}"
 	
 
 
