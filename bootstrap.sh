@@ -1,6 +1,7 @@
 #!/bin/bash +x
 
-PRJ_NAME=mysite
+PRJ_NAME=grigori
+DOMAIN=.me
 EMAIL_ADDR=grigori.kartashyan@gmail.com
 ERROR_LOG_FILE=error.log
 CUSTOM_LOG_FILE=custom.log
@@ -25,8 +26,8 @@ django-admin.py startproject ${PRJ_NAME}
 find ${PRJ_PATH}/${PRJ_NAME} -name settings.py -exec sed -i "s/ALLOWED_HOSTS\ \=\ \[\]/ALLOWED_HOSTS\ \=\ \[\'${IP_ADDRESS}\'\, \'localhost\'\, \'127\.0\.0\.1\'\]/g" {} \;
 
 echo "<VirtualHost *:80>" | tee ${APACHE_DEFAULT_CONF}
-echo "        ServerName ${PRJ_NAME}.org" | tee -a ${APACHE_DEFAULT_CONF}
-echo "        ServerAlias www.${PRJ_NAME}.org" | tee -a ${APACHE_DEFAULT_CONF}
+echo "        ServerName ${PRJ_NAME}${DOMAIN}" | tee -a ${APACHE_DEFAULT_CONF}
+echo "        ServerAlias www.${PRJ_NAME}${DOMAIN}" | tee -a ${APACHE_DEFAULT_CONF}
 echo "        ServerAdmin ${EMAIL_ADDR}" | tee -a ${APACHE_DEFAULT_CONF}
 echo "        DocumentRoot ${PRJ_PATH}/${PRJ_NAME}" | tee -a ${APACHE_DEFAULT_CONF}
 echo "        WSGIScriptAlias / ${PRJ_PATH}/${PRJ_NAME}/${PRJ_NAME}/wsgi.py" | tee -a ${APACHE_DEFAULT_CONF}
