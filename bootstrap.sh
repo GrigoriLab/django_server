@@ -14,7 +14,7 @@ a2enmod headers
 #apt-get install python-mysqldb
 
 #Setting up necessary variables
-PRJ_NAME=website
+PRJ_NAME=djangonew
 DOMAIN=.me
 EMAIL_ADDR=grigori.kartashyan@gmail.com
 ERROR_LOG_FILE=error.log
@@ -24,7 +24,7 @@ PRJ_PATH=/home/vagrant/websites
 LOG_PATH=${PRJ_PATH}/${PRJ_NAME}/logs
 
 APACHE_PATH=/etc/apache2
-PRJ_APACHE_CONF=${APACHE_PATH}/sites-available/${PRJ_NAME}${DOMAIN}.conf
+PRJ_APACHE_CONF=${APACHE_PATH}/sites-available/${WEB_SITE}.conf
 APACHE_CONF=${APACHE_PATH}/apache2.conf
 
 IP_ADDRESS=`ifconfig |grep -A 2 eth1 |grep "inet addr" |awk '{print $2}'|awk -F ":" '{print $2}'`
@@ -65,13 +65,13 @@ echo "        DocumentRoot ${PRJ_PATH}/${PRJ_NAME}" | tee -a ${PRJ_APACHE_CONF}
 echo "        WSGIScriptAlias / ${PRJ_PATH}/${PRJ_NAME}/${PRJ_NAME}/wsgi.py" | tee -a ${PRJ_APACHE_CONF}
 echo "        ErrorLog ${LOG_PATH}/${ERROR_LOG_FILE}" | tee -a ${PRJ_APACHE_CONF}
 echo "        CustomLog ${LOG_PATH}/${CUSTOM_LOG_FILE} combined" | tee -a ${PRJ_APACHE_CONF}
-echo "\n"
+echo "" | tee -a ${PRJ_APACHE_CONF}
 echo "        <Directory /usr/local/lib/python2.7/dist-packages/django/contrib/admin/static/admin>" | tee -a ${PRJ_APACHE_CONF}
 echo "                Options Indexes FollowSymLinks" | tee -a ${PRJ_APACHE_CONF}
 echo "                AllowOverride None" | tee -a ${PRJ_APACHE_CONF}
 echo "                Require all granted" | tee -a ${PRJ_APACHE_CONF}
 echo "        </Directory>" | tee -a ${PRJ_APACHE_CONF}
-echo "\n"
+echo "" | tee -a ${PRJ_APACHE_CONF}
 echo "        <Directory ${PRJ_PATH}/${PRJ_NAME}>" | tee -a ${PRJ_APACHE_CONF}
 echo "                # Always set these headers." | tee -a ${PRJ_APACHE_CONF}
 echo "                Header always set Access-Control-Allow-Origin \"*\"" | tee -a ${PRJ_APACHE_CONF}
