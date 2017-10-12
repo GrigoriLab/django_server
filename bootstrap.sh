@@ -8,6 +8,10 @@ pip install Django==1.11.6
 apt-get -y install apache2
 apt-get -y install python-setuptools
 apt-get -y install libapache2-mod-wsgi
+a2enmod rewrite
+a2enmod headers
+#apt-get install mysql-server
+#apt-get install python-mysqldb
 
 #Setting up necessary variables
 PRJ_NAME=website
@@ -16,7 +20,7 @@ EMAIL_ADDR=grigori.kartashyan@gmail.com
 ERROR_LOG_FILE=error.log
 CUSTOM_LOG_FILE=custom.log
 WEB_SITE=${PRJ_NAME}${DOMAIN}
-PRJ_PATH=/home/vagrant
+PRJ_PATH=/home/vagrant/websites
 LOG_PATH=${PRJ_PATH}/${PRJ_NAME}/logs
 
 APACHE_PATH=/etc/apache2
@@ -55,6 +59,7 @@ find ${REPO_PATH} -type d -exec chmod g+s '{}' +
 echo "<VirtualHost *:80>" | tee ${PRJ_APACHE_CONF}
 echo "        ServerName ${WEB_SITE}" | tee -a ${PRJ_APACHE_CONF}
 echo "        ServerAlias www.${WEB_SITE}" | tee -a ${PRJ_APACHE_CONF}
+echo "        Alias /static/admin \"/usr/local/lib/python2.7/dist-packages/django/contrib/admin/static/admin/\"" | tee -a ${PRJ_APACHE_CONF}
 echo "        ServerAdmin ${EMAIL_ADDR}" | tee -a ${PRJ_APACHE_CONF}
 echo "        DocumentRoot ${PRJ_PATH}/${PRJ_NAME}" | tee -a ${PRJ_APACHE_CONF}
 echo "        WSGIScriptAlias / ${PRJ_PATH}/${PRJ_NAME}/${PRJ_NAME}/wsgi.py" | tee -a ${PRJ_APACHE_CONF}
@@ -70,6 +75,16 @@ echo "WSGIPythonPath ${PRJ_PATH}/${PRJ_NAME}" | tee -a ${APACHE_CONF}
 echo "ServerName localhost" | tee -a ${APACHE_CONF}
 
 echo "<Directory ${PRJ_PATH}/${PRJ_NAME}>" | tee -a ${APACHE_CONF}
+echo "        # Always set these headers." | tee -a ${APACHE_CONF}
+echo "        Header always set Access-Control-Allow-Origin \"*\"" | tee -a ${APACHE_CONF}
+echo "        Header always set Access-Control-Allow-Methods \"POST, GET, OPTIONS, DELETE, PUT\"" | tee -a ${APACHE_CONF}
+echo "        Header always set Access-Control-Max-Age \"1000\"" | tee -a ${APACHE_CONF}
+echo "        Header always set Access-Control-Allow-Headers \"x-requested-with, Content-Type, origin, authorization, accept, client-security-token\"" | tee -a ${APACHE_CONF}
+echo "        # Added a rewrite to respond with a 200 SUCCESS on every OPTIONS request." | tee -a ${APACHE_CONF}
+echo "        RewriteEngine On" | tee -a ${APACHE_CONF}
+echo "        RewriteCond %{REQUEST_METHOD} OPTIONS" | tee -a ${APACHE_CONF}
+echo "        RewriteRule ^(.*)$ \$1 [R=200,L]" | tee -a ${APACHE_CONF}
+	 
 echo "        Options Indexes FollowSymLinks" | tee -a ${APACHE_CONF}
 echo "        AllowOverride None" | tee -a ${APACHE_CONF}
 echo "        Require all granted" | tee -a ${APACHE_CONF}
