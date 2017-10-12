@@ -65,30 +65,36 @@ echo "        DocumentRoot ${PRJ_PATH}/${PRJ_NAME}" | tee -a ${PRJ_APACHE_CONF}
 echo "        WSGIScriptAlias / ${PRJ_PATH}/${PRJ_NAME}/${PRJ_NAME}/wsgi.py" | tee -a ${PRJ_APACHE_CONF}
 echo "        ErrorLog ${LOG_PATH}/${ERROR_LOG_FILE}" | tee -a ${PRJ_APACHE_CONF}
 echo "        CustomLog ${LOG_PATH}/${CUSTOM_LOG_FILE} combined" | tee -a ${PRJ_APACHE_CONF}
+echo "\n"
+echo "        <Directory /usr/local/lib/python2.7/dist-packages/django/contrib/admin/static/admin>" | tee -a ${PRJ_APACHE_CONF}
+echo "                Options Indexes FollowSymLinks" | tee -a ${PRJ_APACHE_CONF}
+echo "                AllowOverride None" | tee -a ${PRJ_APACHE_CONF}
+echo "                Require all granted" | tee -a ${PRJ_APACHE_CONF}
+echo "        </Directory>" | tee -a ${PRJ_APACHE_CONF}
+echo "\n"
+echo "        <Directory ${PRJ_PATH}/${PRJ_NAME}>" | tee -a ${PRJ_APACHE_CONF}
+echo "                # Always set these headers." | tee -a ${PRJ_APACHE_CONF}
+echo "                Header always set Access-Control-Allow-Origin \"*\"" | tee -a ${PRJ_APACHE_CONF}
+echo "                Header always set Access-Control-Allow-Methods \"POST, GET, OPTIONS, DELETE, PUT\"" | tee -a ${PRJ_APACHE_CONF}
+echo "                Header always set Access-Control-Max-Age \"1000\"" | tee -a ${PRJ_APACHE_CONF}
+echo "                Header always set Access-Control-Allow-Headers \"x-requested-with, Content-Type, origin, authorization, accept, client-security-token\"" | tee -a ${PRJ_APACHE_CONF}
+echo "                # Added a rewrite to respond with a 200 SUCCESS on every OPTIONS request." | tee -a ${PRJ_APACHE_CONF}
+echo "                RewriteEngine On" | tee -a ${PRJ_APACHE_CONF}
+echo "                RewriteCond %{REQUEST_METHOD} OPTIONS" | tee -a ${PRJ_APACHE_CONF}
+echo "                RewriteRule ^(.*)$ \$1 [R=200,L]" | tee -a ${PRJ_APACHE_CONF}
+echo "\n"
+echo "                Options Indexes FollowSymLinks" | tee -a ${PRJ_APACHE_CONF}
+echo "                AllowOverride None" | tee -a ${PRJ_APACHE_CONF}
+echo "                Require all granted" | tee -a ${PRJ_APACHE_CONF}
+echo "        </Directory>" | tee -a ${PRJ_APACHE_CONF}
 echo "</VirtualHost>" | tee -a ${PRJ_APACHE_CONF}
 
 #Enable current site
-ln -s ${PRJ_APACHE_CONF} ${APACHE_PATH}/sites-enabled/${PRJ_NAME}${DOMAIN}.conf
+ln -s ${PRJ_APACHE_CONF} ${APACHE_PATH}/sites-enabled/${WEB_SITE}.conf
 
 #Updating apache2.conf file
 echo "WSGIPythonPath ${PRJ_PATH}/${PRJ_NAME}" | tee -a ${APACHE_CONF}
 echo "ServerName localhost" | tee -a ${APACHE_CONF}
-
-echo "<Directory ${PRJ_PATH}/${PRJ_NAME}>" | tee -a ${APACHE_CONF}
-echo "        # Always set these headers." | tee -a ${APACHE_CONF}
-echo "        Header always set Access-Control-Allow-Origin \"*\"" | tee -a ${APACHE_CONF}
-echo "        Header always set Access-Control-Allow-Methods \"POST, GET, OPTIONS, DELETE, PUT\"" | tee -a ${APACHE_CONF}
-echo "        Header always set Access-Control-Max-Age \"1000\"" | tee -a ${APACHE_CONF}
-echo "        Header always set Access-Control-Allow-Headers \"x-requested-with, Content-Type, origin, authorization, accept, client-security-token\"" | tee -a ${APACHE_CONF}
-echo "        # Added a rewrite to respond with a 200 SUCCESS on every OPTIONS request." | tee -a ${APACHE_CONF}
-echo "        RewriteEngine On" | tee -a ${APACHE_CONF}
-echo "        RewriteCond %{REQUEST_METHOD} OPTIONS" | tee -a ${APACHE_CONF}
-echo "        RewriteRule ^(.*)$ \$1 [R=200,L]" | tee -a ${APACHE_CONF}
-	 
-echo "        Options Indexes FollowSymLinks" | tee -a ${APACHE_CONF}
-echo "        AllowOverride None" | tee -a ${APACHE_CONF}
-echo "        Require all granted" | tee -a ${APACHE_CONF}
-echo "</Directory>" | tee -a ${APACHE_CONF}
 
 
 #Restarting Apache server
