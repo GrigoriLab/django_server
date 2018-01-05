@@ -13,14 +13,16 @@ a2enmod headers
 #apt-get install mysql-server
 #apt-get install python-mysqldb
 
+###PLEASE FILL YOUR VALUES FOR THESE VARIABLES
 #Setting up necessary variables
-PRJ_NAME=djangonew
+PRJ_NAME=website
 DOMAIN=.me
+USER_NAME=vagrant
 EMAIL_ADDR=grigori.kartashyan@gmail.com
 ERROR_LOG_FILE=error.log
 CUSTOM_LOG_FILE=custom.log
 WEB_SITE=${PRJ_NAME}${DOMAIN}
-PRJ_PATH=/home/vagrant/websites
+PRJ_PATH=/home/${USER_NAME}/myWebsites
 LOG_PATH=${PRJ_PATH}/${PRJ_NAME}/logs
 
 APACHE_PATH=/etc/apache2
@@ -31,7 +33,7 @@ IP_ADDRESS=`ifconfig |grep -A 2 eth1 |grep "inet addr" |awk '{print $2}'|awk -F 
 REPO_NAME=${WEB_SITE}.git
 REPO_PATH=/repos/${REPO_NAME}
 LIVE_PATH=${PRJ_PATH}/${PRJ_NAME}
-GROUP_NAME='vagrant'
+GROUP_NAME=${USER_NAME}
 
 #Creating directories
 mkdir -p ${LOG_PATH}
@@ -82,7 +84,7 @@ echo "                # Added a rewrite to respond with a 200 SUCCESS on every O
 echo "                RewriteEngine On" | tee -a ${PRJ_APACHE_CONF}
 echo "                RewriteCond %{REQUEST_METHOD} OPTIONS" | tee -a ${PRJ_APACHE_CONF}
 echo "                RewriteRule ^(.*)$ \$1 [R=200,L]" | tee -a ${PRJ_APACHE_CONF}
-echo "\n"
+echo "" | tee -a ${PRJ_APACHE_CONF}
 echo "                Options Indexes FollowSymLinks" | tee -a ${PRJ_APACHE_CONF}
 echo "                AllowOverride None" | tee -a ${PRJ_APACHE_CONF}
 echo "                Require all granted" | tee -a ${PRJ_APACHE_CONF}
@@ -101,7 +103,7 @@ echo "ServerName localhost" | tee -a ${APACHE_CONF}
 service apache2 restart
 
 echo "Server address is ${IP_ADDRESS}"
-echo "In your project add this remote: 'git remote add live ssh://vagrant@${IP_ADDRESS}${REPO_PATH}' and then push the project 'git push live master' "
-echo "Use password 'vagrant' "
+echo "In your project add this remote: 'git remote add live ssh://${USER_NAME}@${IP_ADDRESS}${REPO_PATH}' and then push the project 'git push live master' "
+echo "If you are using vagrant machin use password 'vagrant' "
 echo "Also you should add '${IP_ADDRESS}	${WEB_SITE}' mapping in /etc/hosts file"
 echo "Now you can reach the site by typing in browser ${WEB_SITE}"
