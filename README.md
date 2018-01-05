@@ -9,7 +9,7 @@ In these case I have the repo and the website on the same server and after pushi
 
 ## Configuring
 
- -  PRJ_NAME   - this should be the same name that you used for start the django app 'django-admin startapp PRJ_NAME' 
+ -  PRJ_NAME   - this should be the same name that you used for start the django project 'django-admin startproject PRJ_NAME' 
  -  DOMAIN 	   - could be any
  -  USER_NAME  - usually it will be 'vagrant', but you can run the bootstrap.sh directly on your server, so use the server's username.
  -  PRJ_PATH   - this is the path where apache serves files from.
