@@ -29,7 +29,7 @@ APACHE_PATH=/etc/apache2
 PRJ_APACHE_CONF=${APACHE_PATH}/sites-available/${WEB_SITE}.conf
 APACHE_CONF=${APACHE_PATH}/apache2.conf
 
-IP_ADDRESS=`ifconfig |grep -A 2 eth1 |grep "inet addr" |awk '{print $2}'|awk -F ":" '{print $2}'`
+IP_ADDRESS=`hostname -I |awk '{print $1}'`
 REPO_NAME=${WEB_SITE}.git
 REPO_PATH=/repos/${REPO_NAME}
 LIVE_PATH=${PRJ_PATH}/${PRJ_NAME}
